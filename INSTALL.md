@@ -22,7 +22,7 @@ Guia de instalação reproduzível: AlmaLinux 10.2 com LVM sobre LUKS, serviço 
 | Item | Configuração usada |
 |---|---|
 | Hipervisor | VirtualBox |
-| Firmware | UEFI habilitado (Secure Boot desabilitado) |
+| Firmware | UEFI habilitado |
 | Disco principal | 60 GB |
 | Disco secundário | 20 GB (adicionado após a instalação) |
 | Memória / vCPU | 4096 MB / 2 vCPU |
