@@ -219,7 +219,7 @@ Como a VM está em rede NAT, foi configurada uma regra de redirecionamento no Vi
 |---|---|---|---|
 | SSH | TCP | 2222 | 2155 |
 
-> Nota: esse redirecionamento existe apenas para viabilizar o teste a partir do computador host durante o desenvolvimento; não representa exposição da VM à rede externa (requisito "nunca Bridge exposto" mantido).
+> Nota: esse redirecionamento existe apenas para viabilizar o teste a partir do computador host durante o desenvolvimento; não representa exposição da VM à rede externa.
 
 ### 7.5 Diretivas aplicadas em `/etc/ssh/sshd_config`
 
