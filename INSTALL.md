@@ -241,7 +241,8 @@ Evidência de algoritmos habilitados após a mudança:
 sudo sshd -T | grep -E "ciphers|macs|kexalgorithms"
 ```
 
-> *[PRINT: saída confirmando ausência de SHA-1 e algoritmos legados nas três categorias]*
+<img width="1270" height="142" alt="image" src="https://github.com/user-attachments/assets/83df2740-ca4c-4e37-9f7b-92ad297f4dcb" />
+
 
 ### 6.8 firewalld
 
@@ -255,7 +256,8 @@ sudo firewall-cmd --list-all
 
 Resultado: apenas a porta 2155/tcp liberada, com limite de taxa de 10 novas conexões por minuto (proteção complementar contra força bruta).
 
-> *[PRINT: firewall-cmd --list-all]*
+<img width="757" height="295" alt="image" src="https://github.com/user-attachments/assets/b58c56f2-41fb-4961-be42-571af9ff2196" />
+
 
 ### 6.9 Banner de aviso legal
 
@@ -266,7 +268,8 @@ Acesso restrito a usuários autorizados. Toda atividade neste sistema é monitor
 
 Banner confirmado apresentado ao cliente antes da autenticação.
 
-> *[PRINT: conexão SSH mostrando o banner antes do prompt de senha/chave]*
+<img width="784" height="129" alt="image" src="https://github.com/user-attachments/assets/409085a4-9608-4da4-a288-8c76fe6c9662" />
+
 
 ### 6.10 Verificação da configuração efetiva
 
@@ -274,7 +277,8 @@ Banner confirmado apresentado ao cliente antes da autenticação.
 sudo sshd -T | grep -E "port|permitrootlogin|passwordauthentication|allowgroups|maxauthtries|logingracetime|clientaliveinterval"
 ```
 
-> *[PRINT: saída confirmando todas as diretivas aplicadas]*
+<img width="1247" height="195" alt="image" src="https://github.com/user-attachments/assets/01f5d3d1-4f50-442a-a56c-43374b2a66e4" />
+
 
 ### 6.11 Evidências finais — acesso e bloqueio
 
@@ -298,10 +302,7 @@ User root from 10.0.2.2 not allowed because none of user's groups are listed in 
 Connection reset by invalid user root 10.0.2.2 port 53624 [preauth]
 ```
 
-Também observado: tentativa de conexão sem a passphrase correta da chave resulta em `Permission denied (publickey,gssapi-keyex,gssapi-with-mic)`, confirmando que não existe fallback para autenticação por senha.
-
-> *[PRINT: journalctl mostrando a tentativa de root bloqueada]*
-> *[PRINT: tentativa sem passphrase correta sendo recusada]*
+<img width="1010" height="182" alt="image" src="https://github.com/user-attachments/assets/3a627ec6-f94e-417a-837a-1d772ebc9ad4" />
 
 ---
 
@@ -342,13 +343,15 @@ df -h /home
 
 Resultado: expansão completa realizada **a quente**, sem desmontar `/home`, sem reiniciar o sistema, sem downtime.
 
-Sequência completa do ciclo de vida:
+Sequência completa:
 ```
 disco físico → pvcreate → vgextend → lvextend → cryptsetup resize (LUKS) → xfs_growfs
 ```
 
-> *[PRINT: lsblk -f mostrando /home expandido com sdb incorporado]*
-> *[PRINT: df -h /home antes e depois]*
+<img width="1185" height="409" alt="image" src="https://github.com/user-attachments/assets/38bb404e-7c1c-4c02-86d7-9feca8d0ef04" />
+
+<img width="813" height="68" alt="image" src="https://github.com/user-attachments/assets/97a61816-7647-491a-9e7b-65c1f1c66099" />
+
 
 ---
 
@@ -360,7 +363,8 @@ disco físico → pvcreate → vgextend → lvextend → cryptsetup resize (LUKS
 | `Configuração SSH Completa` | Após o hardening do SSH | Todas as diretivas de segurança aplicadas e testadas |
 | `LVM Expandido` | Após o ciclo de vida do LVM | Disco secundário incorporado, /home expandido para 25G |
 
-> *[PRINT: painel de Snapshots do VirtualBox com os três pontos]*
+<img width="1089" height="143" alt="image" src="https://github.com/user-attachments/assets/a25ee07e-11d4-40a6-a4f5-a3c76af77cf7" />
+
 
 ---
 
