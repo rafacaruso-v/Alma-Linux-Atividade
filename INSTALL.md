@@ -4,15 +4,15 @@ Guia de instalação reproduzível: AlmaLinux 10.2 com LVM sobre LUKS, serviço 
 
 ## Sumário
 
-1. [Ambiente e Criação da VM](#1-ambiente-e-Criação-da-VM)
+1. [Ambiente e Criação da VM](#1-ambiente-e-criação-da-vm)
 2. [Verificação de integridade da ISO](#2-verificação-de-integridade-da-iso)
-3. [Diagrama de particionamento](#4-diagrama-de-particionamento)
-4. [Instalação — particionamento manual (LUKS + LVM)](#5-instalação--particionamento-manual-luks--lvm)
-5. [Primeiro acesso e verificação inicial](#6-primeiro-acesso-e-verificação-inicial)
-6. [Configuração do SSH endurecido](#7-configuração-do-ssh-endurecido)
-7. [Ciclo de vida do LVM — disco secundário](#8-ciclo-de-vida-do-lvm--disco-secundário)
-8. [Snapshots da VM](#9-snapshots-da-vm)
-9. [Seção de troubleshooting](#10-seção-de-troubleshooting)
+3. [Diagrama de particionamento](#3-diagrama-de-particionamento)
+4. [Instalação — particionamento manual (LUKS + LVM)](#4-instalação--particionamento-manual-luks--lvm)
+5. [Primeiro acesso e verificação inicial](#5-primeiro-acesso-e-verificação-inicial)
+6. [Configuração do SSH endurecido](#6-configuração-do-ssh-endurecido)
+7. [Ciclo de vida do LVM — disco secundário](#7-ciclo-de-vida-do-lvm--disco-secundário)
+8. [Snapshots da VM](#8-snapshots-da-vm)
+9. [Seção de troubleshooting](#9-seção-de-troubleshooting)
 
 ---
 
