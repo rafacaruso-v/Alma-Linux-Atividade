@@ -30,7 +30,8 @@ Guia de instalação reproduzível: AlmaLinux 10.2 com LVM sobre LUKS, serviço 
 | Instalação | AlmaLinux 10.2 — Minimal Install (Server sem GUI) |
 | SELinux | Enforcing |
 
-> *[PRINT: tela "Pré-Visualização" do VirtualBox com Geral/Sistema/Armazenamento/Rede da VM]*
+<img width="1091" height="715" alt="image" src="https://github.com/user-attachments/assets/ffae2489-d7ae-4cee-859d-2f61a38cb883" />
+
 
 ---
 
