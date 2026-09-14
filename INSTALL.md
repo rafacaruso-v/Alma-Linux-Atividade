@@ -1,4 +1,4 @@
-# INSTALL.md — Grupo 3 (AlmaLinux)
+# Processo de Instalação — Grupo 3 (AlmaLinux)
 
 Guia de instalação reproduzível: AlmaLinux 10.2 com LVM sobre LUKS, serviço SSH endurecido e ciclo de vida do LVM.
 
