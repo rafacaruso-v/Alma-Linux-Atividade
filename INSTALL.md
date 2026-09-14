@@ -58,7 +58,7 @@ Resultado obtido: **hash idêntico ao oficial** — integridade confirmada.
 
 ## 3. Diagrama de particionamento
 
-Esquema de referência validado com o professor (marco D-14, **antes** da instalação):
+Esquema de referência (**antes** da instalação):
 
 ```
 sda1   /boot/efi     1 GB    FAT32    fora do LUKS
@@ -77,7 +77,8 @@ sda3   (LUKS2)       ~58 GB  LUKS2    container criptografado
 
 Soma dos LVs: 15+8+5+3+10+3+4 = 48 GB, dentro dos ~58 GB do container LUKS, sobrando espaço livre não alocado (requisito do trabalho: espaço livre é necessário para snapshots de LVM).
 
-> *[PRINT ou imagem: diagrama de particionamento submetido para validação]*
+<img width="1360" height="1080" alt="image" src="https://github.com/user-attachments/assets/69ace3e7-18fc-45d7-842b-450ae3da6789" />
+
 
 ---
 
@@ -90,15 +91,17 @@ No particionamento manual do Anaconda, os dois primeiros pontos de montagem fora
 - `/boot/efi` — 1 GiB — Partição padrão — EFI System Partition
 - `/boot` — 1 GiB — Partição padrão — xfs
 
-> *[PRINT: tela de particionamento manual com /boot/efi e /boot criados]*
+<img width="1244" height="709" alt="image" src="https://github.com/user-attachments/assets/f867e9d3-c5f4-48bd-b651-2f49fd3d374d" />
+<img width="1265" height="782" alt="image" src="https://github.com/user-attachments/assets/d44b463c-4730-49e1-bea8-3b9c032c9244" />
+
 
 ### 4.2 Criação do `/` com LVM + LUKS
 
 Ao criar o ponto de montagem `/`, o tipo de dispositivo foi alterado para **LVM**, a caixa **"Criptografar"** foi marcada, e um novo Volume Group (`almalinux_10`) foi criado. Nesse momento o Anaconda solicitou a definição da **passphrase do LUKS**.
 
-> **Atenção crítica:** a passphrase do LUKS foi anotada em local seguro imediatamente. Sem ela e sem backup do header, não existe recuperação possível do disco.
 
-> *[PRINT: tela de configuração do LV root com LVM + Criptografar marcado]*
+<img width="1256" height="710" alt="image" src="https://github.com/user-attachments/assets/af74613d-372a-47ff-8aa0-feb39e19c4a8" />
+
 
 ### 4.3 Criação dos demais LVs
 
@@ -114,13 +117,9 @@ Para cada LV subsequente, o checkbox **"Criptografar" foi marcado individualment
 | `/tmp` | 3G | LVM | Sim | xfs |
 | `swap` | 4G | LVM | Sim | swap (automático) |
 
-> *[PRINT: lista final de pontos de montagem antes de clicar em "Pronto"]*
 
-### 4.4 Resumo de mudanças
+<img width="646" height="514" alt="image" src="https://github.com/user-attachments/assets/395abc17-7371-4456-8edd-4cf8e9acca67" />
 
-Antes de aplicar, o Anaconda apresentou o resumo de mudanças, confirmando a criação da tabela GPT, das partições `sda1`/`sda2`/`sda3`, do physical volume LVM em `sda3` e do Volume Group `almalinux_10`.
-
-> *[PRINT: tela "RESUMO DE MUDANÇAS"]*
 
 ### 4.5 Demais configurações da instalação
 
@@ -179,15 +178,6 @@ echo "ssh-ed25519 AAAA... grupo3-almalinux" >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 ```
 
-Validação por fingerprint (mais confiável que comparação visual):
-```bash
-ssh-keygen -lf ~/.ssh/authorized_keys        # na VM
-ssh-keygen -lf C:\Users\PC\.ssh\id_ed25519.pub  # no host
-```
-Fingerprint idêntico confirmado em ambos os lados: `SHA256:0GxtMyXKnhD/...`
-
-> *[PRINT: comparação de fingerprints]*
-
 ### 6.3 Grupo dedicado para acesso SSH
 
 ```bash
@@ -206,11 +196,6 @@ Como a VM está em rede NAT, foi configurada uma regra de redirecionamento no Vi
 > Nota: esse redirecionamento existe apenas para viabilizar o teste a partir do computador host durante o desenvolvimento; não representa exposição da VM à rede externa.
 
 ### 6.5 Diretivas aplicadas em `/etc/ssh/sshd_config`
-
-Backup do arquivo original realizado antes de qualquer alteração:
-```bash
-sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
-```
 
 ```
 Port 2155
@@ -237,7 +222,8 @@ sudo semanage port -l | grep ssh
 ```
 Resultado: `ssh_port_t   tcp   2155, 22`
 
-> *[PRINT: semanage port -l | grep ssh]*
+<img width="412" height="32" alt="image" src="https://github.com/user-attachments/assets/077b0e94-ac3c-4d86-b176-c0a821a1c770" />
+
 
 ### 6.7 update-crypto-policies
 
@@ -340,7 +326,7 @@ sudo lvs
 # home: ~25.02g
 ```
 
-**Passo adicional necessário por causa do LUKS** (não documentado nos tutoriais genéricos de LVM sem criptografia): o `lvextend` expande o Logical Volume, mas o mapeamento LUKS por cima dele não é redimensionado automaticamente. É necessário:
+**Passo adicional necessário por causa do LUKS**: o `lvextend` expande o Logical Volume, mas o mapeamento LUKS por cima dele não é redimensionado automaticamente. É necessário:
 
 ```bash
 sudo cryptsetup resize luks-6df17b8a-3365-4d03-b762-b373a6d87e94
