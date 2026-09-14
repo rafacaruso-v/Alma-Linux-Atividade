@@ -4,20 +4,19 @@ Guia de instalação reproduzível: AlmaLinux 10.2 com LVM sobre LUKS, serviço 
 
 ## Sumário
 
-1. [Ambiente e pré-requisitos](#1-ambiente-e-pré-requisitos)
+1. [Ambiente e Criação da VM](#1-ambiente-e-Criação-da-VM)
 2. [Verificação de integridade da ISO](#2-verificação-de-integridade-da-iso)
-3. [Criação da VM](#3-criação-da-vm)
-4. [Diagrama de particionamento](#4-diagrama-de-particionamento)
-5. [Instalação — particionamento manual (LUKS + LVM)](#5-instalação--particionamento-manual-luks--lvm)
-6. [Primeiro acesso e verificação inicial](#6-primeiro-acesso-e-verificação-inicial)
-7. [Configuração do SSH endurecido](#7-configuração-do-ssh-endurecido)
-8. [Ciclo de vida do LVM — disco secundário](#8-ciclo-de-vida-do-lvm--disco-secundário)
-9. [Snapshots da VM](#9-snapshots-da-vm)
-10. [Seção de troubleshooting](#10-seção-de-troubleshooting)
+3. [Diagrama de particionamento](#4-diagrama-de-particionamento)
+4. [Instalação — particionamento manual (LUKS + LVM)](#5-instalação--particionamento-manual-luks--lvm)
+5. [Primeiro acesso e verificação inicial](#6-primeiro-acesso-e-verificação-inicial)
+6. [Configuração do SSH endurecido](#7-configuração-do-ssh-endurecido)
+7. [Ciclo de vida do LVM — disco secundário](#8-ciclo-de-vida-do-lvm--disco-secundário)
+8. [Snapshots da VM](#9-snapshots-da-vm)
+9. [Seção de troubleshooting](#10-seção-de-troubleshooting)
 
 ---
 
-## 1. Ambiente e pré-requisitos
+## 1. Ambiente e Criação da VM
 
 | Item | Configuração usada |
 |---|---|
@@ -51,29 +50,13 @@ Get-FileHash .\AlmaLinux-10.2-x86_64-minimal.iso -Algorithm SHA256
 
 Resultado obtido: **hash idêntico ao oficial** — integridade confirmada.
 
-> *[PRINT: saída do Get-FileHash comparada ao hash do site oficial]*
+<img width="988" height="95" alt="image" src="https://github.com/user-attachments/assets/fdc5a6f8-7c15-4555-b2a7-02810d26ffab" />
+<img width="793" height="100" alt="image" src="https://github.com/user-attachments/assets/7ab7a121-2d7f-4594-8e3b-b7460b7c8848" />
 
-> **Nota:** inicialmente foi baixada por engano a ISO **DVD** (~9,4 GB), que inclui pacotes de ambiente gráfico. Como o requisito do trabalho exige *Minimal Install*, foi baixada e validada a ISO **Minimal** (~2 GB) em seu lugar. Ver seção de troubleshooting.
-
----
-
-## 3. Criação da VM
-
-- Nome: `AlmaLinux`
-- Sistema Operacional: Linux / Red Hat (64-bit) — o VirtualBox não possui entrada específica para AlmaLinux, então a família Red Hat foi usada por compatibilidade
-- **"Proceed with Unattended Installation" foi mantido desmarcado** — essa opção faz particionamento automático e não permite configurar LUKS/LVM manualmente, o que inviabilizaria o requisito central do trabalho
-- Hardware: 4096 MB RAM, 2 vCPUs
-- Recursos habilitados: I/O APIC, Hardware Clock in UTC, UEFI
-- Secure Boot: desabilitado (evita travas no boot/instalação)
-- Armazenamento: `AlmaLinux.vdi` (60 GB, SATA)
-- Rede: Adaptador 1, NAT
-
-> *[PRINT: tela de resumo "Pré-Visualização" da VM]*
-> *[PRINT: tela de Recursos com I/O APIC, Hardware Clock, UEFI, Secure Boot]*
 
 ---
 
-## 4. Diagrama de particionamento
+## 3. Diagrama de particionamento
 
 Esquema de referência validado com o professor (marco D-14, **antes** da instalação):
 
@@ -98,9 +81,9 @@ Soma dos LVs: 15+8+5+3+10+3+4 = 48 GB, dentro dos ~58 GB do container LUKS, sobr
 
 ---
 
-## 5. Instalação — particionamento manual (LUKS + LVM)
+## 4. Instalação — particionamento manual (LUKS + LVM)
 
-### 5.1 Criação dos pontos de montagem fora do LUKS
+### 4.1 Criação dos pontos de montagem fora do LUKS
 
 No particionamento manual do Anaconda, os dois primeiros pontos de montagem foram criados **sem** marcar "Criptografar", pois o GRUB precisa ler o kernel antes de existir qualquer chave de descriptografia:
 
@@ -109,7 +92,7 @@ No particionamento manual do Anaconda, os dois primeiros pontos de montagem fora
 
 > *[PRINT: tela de particionamento manual com /boot/efi e /boot criados]*
 
-### 5.2 Criação do `/` com LVM + LUKS
+### 4.2 Criação do `/` com LVM + LUKS
 
 Ao criar o ponto de montagem `/`, o tipo de dispositivo foi alterado para **LVM**, a caixa **"Criptografar"** foi marcada, e um novo Volume Group (`almalinux_10`) foi criado. Nesse momento o Anaconda solicitou a definição da **passphrase do LUKS**.
 
@@ -117,7 +100,7 @@ Ao criar o ponto de montagem `/`, o tipo de dispositivo foi alterado para **LVM*
 
 > *[PRINT: tela de configuração do LV root com LVM + Criptografar marcado]*
 
-### 5.3 Criação dos demais LVs
+### 4.3 Criação dos demais LVs
 
 Para cada LV subsequente, o checkbox **"Criptografar" foi marcado individualmente** — no Anaconda, marcar a criptografia em um LV não propaga automaticamente para os demais do mesmo VG.
 
@@ -133,13 +116,13 @@ Para cada LV subsequente, o checkbox **"Criptografar" foi marcado individualment
 
 > *[PRINT: lista final de pontos de montagem antes de clicar em "Pronto"]*
 
-### 5.4 Resumo de mudanças
+### 4.4 Resumo de mudanças
 
 Antes de aplicar, o Anaconda apresentou o resumo de mudanças, confirmando a criação da tabela GPT, das partições `sda1`/`sda2`/`sda3`, do physical volume LVM em `sda3` e do Volume Group `almalinux_10`.
 
 > *[PRINT: tela "RESUMO DE MUDANÇAS"]*
 
-### 5.5 Demais configurações da instalação
+### 4.5 Demais configurações da instalação
 
 - Teclado: Português (Brasil)
 - Fuso horário: Américas/São Paulo
@@ -150,7 +133,7 @@ Antes de aplicar, o Anaconda apresentou o resumo de mudanças, confirmando a cri
 
 ---
 
-## 6. Primeiro acesso e verificação inicial
+## 5. Primeiro acesso e verificação inicial
 
 Após o primeiro boot, login realizado com sucesso solicitando a passphrase do LUKS.
 
@@ -177,9 +160,9 @@ sestatus
 
 ---
 
-## 7. Configuração do SSH endurecido
+## 6. Configuração do SSH endurecido
 
-### 7.1 Geração do par de chaves ed25519 (no host, não na VM)
+### 6.1 Geração do par de chaves ed25519 (no host, não na VM)
 
 ```powershell
 ssh-keygen -t ed25519 -C "grupo3-almalinux"
@@ -187,7 +170,7 @@ ssh-keygen -t ed25519 -C "grupo3-almalinux"
 
 Chave protegida por passphrase própria (camada adicional de segurança do lado do cliente).
 
-### 7.2 Cópia da chave pública para a VM
+### 6.2 Cópia da chave pública para a VM
 
 ```bash
 mkdir -p ~/.ssh
@@ -205,14 +188,14 @@ Fingerprint idêntico confirmado em ambos os lados: `SHA256:0GxtMyXKnhD/...`
 
 > *[PRINT: comparação de fingerprints]*
 
-### 7.3 Grupo dedicado para acesso SSH
+### 6.3 Grupo dedicado para acesso SSH
 
 ```bash
 sudo groupadd sshusers
 sudo usermod -aG sshusers usuario
 ```
 
-### 7.4 Port forwarding (ambiente de teste local)
+### 6.4 Port forwarding (ambiente de teste local)
 
 Como a VM está em rede NAT, foi configurada uma regra de redirecionamento no VirtualBox para permitir testes a partir do host:
 
@@ -222,7 +205,7 @@ Como a VM está em rede NAT, foi configurada uma regra de redirecionamento no Vi
 
 > Nota: esse redirecionamento existe apenas para viabilizar o teste a partir do computador host durante o desenvolvimento; não representa exposição da VM à rede externa.
 
-### 7.5 Diretivas aplicadas em `/etc/ssh/sshd_config`
+### 6.5 Diretivas aplicadas em `/etc/ssh/sshd_config`
 
 Backup do arquivo original realizado antes de qualquer alteração:
 ```bash
@@ -245,7 +228,7 @@ Validação de sintaxe antes de aplicar:
 sudo sshd -t
 ```
 
-### 7.6 SELinux — rótulo da porta customizada
+### 6.6 SELinux — rótulo da porta customizada
 
 ```bash
 sudo dnf install policycoreutils-python-utils -y
@@ -256,7 +239,7 @@ Resultado: `ssh_port_t   tcp   2155, 22`
 
 > *[PRINT: semanage port -l | grep ssh]*
 
-### 7.7 update-crypto-policies
+### 6.7 update-crypto-policies
 
 Testada a política `FUTURE` — **quebrou a negociação de chaves** com o cliente OpenSSH do Windows (algoritmos pós-quânticos ainda não suportados pelo cliente). Ver seção de troubleshooting.
 
@@ -274,7 +257,7 @@ sudo sshd -T | grep -E "ciphers|macs|kexalgorithms"
 
 > *[PRINT: saída confirmando ausência de SHA-1 e algoritmos legados nas três categorias]*
 
-### 7.8 firewalld
+### 6.8 firewalld
 
 ```bash
 sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" port port="2155" protocol="tcp" accept limit value="10/m"'
@@ -288,7 +271,7 @@ Resultado: apenas a porta 2155/tcp liberada, com limite de taxa de 10 novas cone
 
 > *[PRINT: firewall-cmd --list-all]*
 
-### 7.9 Banner de aviso legal
+### 6.9 Banner de aviso legal
 
 `/etc/issue.net`:
 ```
@@ -299,7 +282,7 @@ Banner confirmado apresentado ao cliente antes da autenticação.
 
 > *[PRINT: conexão SSH mostrando o banner antes do prompt de senha/chave]*
 
-### 7.10 Verificação da configuração efetiva
+### 6.10 Verificação da configuração efetiva
 
 ```bash
 sudo sshd -T | grep -E "port|permitrootlogin|passwordauthentication|allowgroups|maxauthtries|logingracetime|clientaliveinterval"
@@ -307,7 +290,7 @@ sudo sshd -T | grep -E "port|permitrootlogin|passwordauthentication|allowgroups|
 
 > *[PRINT: saída confirmando todas as diretivas aplicadas]*
 
-### 7.11 Evidências finais — acesso e bloqueio
+### 6.11 Evidências finais — acesso e bloqueio
 
 **Acesso por chave funcionando:**
 ```powershell
@@ -336,7 +319,7 @@ Também observado: tentativa de conexão sem a passphrase correta da chave resul
 
 ---
 
-## 8. Ciclo de vida do LVM — disco secundário
+## 7. Ciclo de vida do LVM — disco secundário
 
 Disco `AlmaLinux_1.vdi` (20 GB) adicionado à VM via VirtualBox (Configurações → Armazenamento → Controladora SATA → novo Hard Disk).
 
@@ -383,7 +366,7 @@ disco físico → pvcreate → vgextend → lvextend → cryptsetup resize (LUKS
 
 ---
 
-## 9. Snapshots da VM
+## 8. Snapshots da VM
 
 | Snapshot | Momento | Descrição |
 |---|---|---|
@@ -395,46 +378,46 @@ disco físico → pvcreate → vgextend → lvextend → cryptsetup resize (LUKS
 
 ---
 
-## 10. Seção de troubleshooting
+## 9. Seção de troubleshooting
 
-### 10.1 ISO errada baixada inicialmente
+### 9.1 ISO errada baixada inicialmente
 **Problema:** a primeira ISO baixada foi a versão DVD (~9,4 GB), que inclui pacotes gráficos e não corresponde ao requisito de Minimal Install.
 **Solução:** identificada a seção "Minimal" na página oficial de downloads, baixada a ISO correta (~2 GB) e validado o hash SHA-256 antes de prosseguir.
 
-### 10.2 Ferramentas administrativas ausentes na instalação Minimal
+### 9.2 Ferramentas administrativas ausentes na instalação Minimal
 **Problema:** comandos como `nano` e `semanage` não estavam disponíveis por padrão.
 **Causa:** instalação Minimal reduz a superfície de pacotes instalados por padrão — isso é esperado e correto, não um erro de instalação.
 **Solução:** instalados sob demanda (`dnf install nano`, `dnf install policycoreutils-python-utils`). Importante destacar: o **SELinux em si já estava ativo desde o primeiro boot** (`getenforce` retornando `Enforcing`) — apenas a ferramenta de administração (`semanage`) precisou ser instalada à parte.
 
-### 10.3 Acesso SSH via IP interno não funcionava (Connection timed out)
+### 9.3 Acesso SSH via IP interno não funcionava (Connection timed out)
 **Problema:** tentativa de `ssh usuario@10.0.2.15` a partir do host resultava em timeout.
 **Causa:** rede em modo NAT isola a VM; o host não consegue iniciar conexões para dentro da VM usando o IP interno.
 **Solução:** configurado Port Forwarding no VirtualBox (host:2222 → VM:2155), permitindo teste via `ssh -p 2222 usuario@127.0.0.1`.
 
-### 10.4 Autenticação por chave caindo para senha
+### 9.4 Autenticação por chave caindo para senha
 **Problema:** mesmo com a chave pública corretamente instalada em `authorized_keys` (confirmado por fingerprint idêntico), o SSH solicitava a senha do usuário.
 **Causa:** a passphrase da chave privada estava sendo digitada incorretamente três vezes seguidas; após esgotar as tentativas, o cliente SSH parte automaticamente para o próximo método de autenticação disponível (senha).
 **Diagnóstico:** uso de `ssh -v` no cliente revelou claramente a sequência `Server accepts key` seguida de três tentativas de passphrase e posterior fallback para `password`.
 **Solução:** confirmação cuidadosa da passphrase correta da chave privada.
 
-### 10.5 LoginGraceTime excedido durante testes
+### 9.5 LoginGraceTime excedido durante testes
 **Problema:** conexão fechada com `kex_exchange_identification: Connection closed by remote host` após múltiplas tentativas seguidas de autenticação.
 **Causa:** o servidor aplicou a penalidade de `LoginGraceTime` (tempo máximo para completar a autenticação) após a sessão anterior demorar demais entre tentativas de passphrase.
 **Solução:** aguardar a liberação temporária e reconectar — comportamento normal e esperado de segurança do OpenSSH (o mesmo mecanismo que o trabalho pede para configurar explicitamente com `LoginGraceTime 30`).
 
-### 10.6 Política de criptografia FUTURE quebrou a negociação SSH
+### 9.6 Política de criptografia FUTURE quebrou a negociação SSH
 **Problema:** ao aplicar `update-crypto-policies --set FUTURE`, a conexão SSH passou a falhar com `Unable to negotiate ... no matching key exchange method found`.
 **Causa:** a política FUTURE habilita exclusivamente algoritmos de troca de chave pós-quânticos (ex.: `mlkem768x25519-sha256`), que o cliente OpenSSH do Windows utilizado ainda não suporta.
 **Decisão do grupo:** revertido para uma política mais equilibrada. Testada a existência do módulo `NO-SHA1` (não disponível nesta versão do AlmaLinux 10 — a estrutura de módulos de política mudou em relação ao RHEL 9). Optado pela política `DEFAULT:OSPP`, perfil de hardening Common Criteria da Red Hat, validada como compatível com o cliente e efetiva na remoção de algoritmos legados (confirmado via `sshd -T`, sem SHA-1 presente nas MACs habilitadas).
 **Aprendizado documentado:** segurança máxima teórica (FUTURE) nem sempre é a escolha correta em um ambiente com restrições reais de compatibilidade de cliente — trade-off consciente documentado como decisão de administração.
 
-### 10.7 xfs_growfs não expandiu o filesystem após lvextend
+### 9.7 xfs_growfs não expandiu o filesystem após lvextend
 **Problema:** após `lvextend -L +15G`, o `df -h /home` continuava mostrando o tamanho antigo (10G), e `xfs_growfs` retornava `data size unchanged, skipping`.
 **Causa:** existe uma camada de criptografia LUKS entre o Logical Volume e o sistema de arquivos XFS. O `lvextend` expandiu apenas o LV; o mapeamento `/dev/mapper/luks-...` permaneceu no tamanho antigo até ser explicitamente redimensionado.
 **Solução:** executado `cryptsetup resize luks-<uuid>` antes do `xfs_growfs`, alinhando o tamanho do mapeamento criptografado com o novo tamanho do LV. Após esse passo, o `xfs_growfs` reconheceu corretamente o espaço adicional.
 **Observação:** esse passo intermediário não é mencionado em tutoriais genéricos de expansão de LVM (que assumem ausência de criptografia), sendo um ponto de atenção específico para ambientes com LVM sobre LUKS.
 
-### 10.8 Conflitos de opções de montagem (nodev/nosuid/noexec)
+### 9.8 Conflitos de opções de montagem (nodev/nosuid/noexec)
 *(A preencher pelo grupo conforme testes específicos realizados nas opções restritivas de `/tmp`, `/var/tmp`, `/var`, `/var/log` — documentar qualquer conflito real encontrado, por exemplo com atualizações de pacotes que descompactam em `/var/tmp`, ou serviços que dependam de execução em `/var`.)*
 
 ---
