@@ -9,7 +9,6 @@ Pedido:
 
 Crie um modelo do INSTALL.md de tudo que fizemos e deixe espaço para eu mesmo adicionar prints.
 
---------------------------------------------------------------------------------------------------
 
 Resposta da IA: 
 
