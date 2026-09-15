@@ -9,6 +9,8 @@ Pedido:
 
 Crie um modelo do INSTALL.md de tudo que fizemos e deixe espaço para eu mesmo adicionar prints.
 
+--------------------------------------------------------------------------------------------------
+
 Resposta da IA: 
 
 Criei o INSTALL.md completo, documentando tudo que fizemos até agora, seção por seção. Ele já está estruturado exatamente como o trabalho pede: guia reproduzível + diagrama + espaço para prints + seção de troubleshooting robusta.
