@@ -1,0 +1,11 @@
+[Unit]
+Description=Roda o /root/Systemd/fim.sh
+
+[Service]
+#o oneshot diz pro serviço que a tarefa começa e termina, para evitar loop, executando uma vez e encerrando
+Type=oneshot
+#é o caminho do comando que vai ser executado pelo systemd
+ExecStart=/bin/bash /root/Systemd/fim-check.sh
+#define qual usuário vai executar o serviço
+User=root
+ 
