@@ -1,0 +1,12 @@
+O AIDE é muito mais rápido e faz vários testes com hashs de tipos diferentes, enquanto a função do calcular_hash do nosso shell script trabalha 
+apenas com um tipo de hash (Sha256) e demora muito mais tempo para passar por todos os diretórios. Além disso ele também, mostra quantos arquivos 
+foram analisados, quantos foram adicionados, quantos removidos e quantos mudados, mostrando também o caminho do arquivo e a data de execução. 
+nosso código também trata da data, ficando salvo no log o horário que cada arquivo foi buscado no sistema. 
+
+O AIDE também verifica as informações da Access Control list ao trocar a permissão do arquivo, que é uma lista mais detalhada referente 
+a permissão do usuário, grupo e outros. Vale ressaltar que o AIDE também faz a verificação do dono e do contexto SElinux (se tudo tiver habilitado na /etc/aide.conf)
+e mostra os diretórios monitorados. Além disso, diferente do nosso que salva em um arquivo.txt, o AIDE salva os dados em um arquivo de banco de dados 
+e lá dá para perceber que o contexto do SElinux é codificado em base64, onde se decodificado mostra o contexto exato dele.
+
+
+Foi o que conseguimos perceber.
