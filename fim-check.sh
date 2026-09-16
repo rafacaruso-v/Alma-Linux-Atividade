@@ -83,7 +83,7 @@ verificar_privilegio
 analisar_dependencias(){
 
 #Percorre uma lista com os comandos sha256 stat find mktemp nano semanage e exibe se eles existem ou nao
-for comando in sha256 stat find mktemp nano semanage
+for comando in sha256sum stat find mktemp nano semanage
 do
 
 if command -v "$comando"; then
