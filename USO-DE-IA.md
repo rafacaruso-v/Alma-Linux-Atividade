@@ -26,7 +26,6 @@ Ciclo de vida do LVM com o disco secundário
 Lista dos 3 snapshots
 7 casos reais de troubleshooting documentados com problema → causa → solução (ISO errada, ferramentas ausentes, timeout de conexão, chave caindo pra senha, LoginGraceTime, política FUTURE quebrando SSH, e o resize do LUKS)
 
---
 
 ## 2) Criação do layout dos slides
 
