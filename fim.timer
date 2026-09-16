@@ -1,0 +1,14 @@
+[Unit]
+Description=Temporizador para rodar o fim.service
+
+[Timer]
+Unit=fim.service
+#OnCalendar=Wednesday *-*-* 11:15:00 pra ligar toda quarta-feira 11:15
+Persistent=true
+#Persistent é um comando para não perder a execução enquanto a Vm tava desligada, fazendo o timer executar uma vez caso tenha perdido uma execução durante o tempo que ela tava desligada
+#OnBootSec = "executa o timer após um tempo definido desde a inicialização da VM"
+OnCalendar=*:0/30
+#executar de 30 em 30 minutos
+[Install]
+WantedBy=timers.target
+#para fazer o timer iniciar junto com o systemd
