@@ -49,7 +49,7 @@ Ajuste da política de criptografia do sistema para DEFAULT:OSPP.
 Script em Shell de verificação de integridade de arquivos (fim-check.sh) automatizado via timer do systemd. 
 Questionário acadêmico interativo.
 
-3. Desenvolvimento do script de integridade fim-check.sh
+## 3). Desenvolvimento do script de integridade fim-check.sh
 
 Pedido:
 
@@ -60,7 +60,7 @@ Resposta da IA:
 
 Foi analisada a estrutura do script e indicados os ajustes necessários para atender aos requisitos, mantendo a ideia principal do código. Entre os pontos trabalhados estavam a organização em funções, o tratamento das opções, a geração do baseline, a comparação dos arquivos e a classificação das alterações.
 
-4. Organização das opções com getopts
+## 4). Organização das opções com getopts
 
 Pedido:
 
@@ -72,7 +72,7 @@ Resposta da IA:
 Foi explicado como manter o getopts para receber as opções pela linha de comando e organizar o tratamento delas. Também foi mostrado como utilizar as opções de ajuda e execução do script sem precisar modificar toda a estrutura existente.
 
 
-5. Utilização do case no tratamento das opções
+## 5). Utilização do case no tratamento das opções
 
 Pedido:
 
@@ -84,7 +84,7 @@ Resposta da IA:
 Foi mostrada uma forma de organizar o case junto com o getopts, fazendo cada opção chamar a função correspondente. Dessa forma, o código fica separado em partes e cada opção possui uma responsabilidade específica.
 
 
-6. Utilização do set -euo pipefail
+## 6). Utilização do set -euo pipefail
 
 Pedido:
 
@@ -101,12 +101,11 @@ Foi explicado que:
 
 Também foram apontados alguns cuidados necessários ao adaptar o código, principalmente com variáveis que podem não existir e comandos que podem retornar códigos diferentes de zero durante as verificações.
 
-7. Utilização de mktemp e trap
+## 7). Utilização de mktemp e trap
 
 Pedido:
 
 O script tem que utilizar mktemp e trap para trabalhar com arquivos temporários. Como que eu coloco essa lógica na minha versão e garanto que esses arquivos sejam removidos corretamente depois da execução? passo pra qual função o caminho?
-
 
 Resposta da IA:
 
@@ -114,7 +113,7 @@ Foi explicado que o mktemp pode ser utilizado para criar arquivos temporários c
 
 A estrutura foi mantida para evitar que arquivos temporários fiquem no sistema caso o script termine normalmente ou seja interrompido. Também foi explicado onde manter o caminho do arquivo temporário para que ele possa ser utilizado pela função responsável pela limpeza.
 
-8. Configuração do serviço fim.service
+## 8). Configuração do serviço fim.service
 
 Pedido:
 
